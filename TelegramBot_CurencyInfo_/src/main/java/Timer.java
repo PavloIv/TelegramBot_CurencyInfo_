@@ -1,3 +1,4 @@
+import keyboards.Menu;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import settings.Settings;
 
@@ -34,7 +35,7 @@ public class Timer implements Runnable {
             int userNotificationTime = Settings.settings.get(key).getNotificationTime().getTime();
             int userZoneId = Settings.settings.get(key).getZoneId().getZone();
             if (userNotificationTime == (int) hour.toHours()+userZoneId) {
-                CurrencyInfoBot timer = CurrencyInfoBot.getInstance("timer");
+                CurrencyInfoBot timer = CurrencyInfoBot.getInstance("currencyInfoBot",new Menu());
                 timer.printMessage(chatId, Settings.getInfo(chatId));
             }
         }

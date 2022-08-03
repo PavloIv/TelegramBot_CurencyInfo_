@@ -1,1 +1,1 @@
-{"465219830":{"chatId":465219830,"numberOfDecimalPlaces":"TWO","selectedBank":"PRIVAT","selectedCurrency":["USD"],"notificationTime":"NINE","zoneId":"UTC_THREE"}}
+{"465219830":{"chatId":465219830,"numberOfDecimalPlaces":"THREE","selectedBank":"NBU","selectedCurrency":["USD","EUR","PLN","BTC"],"notificationTime":"TWELVE","zoneId":"UTC_THREE"}}

@@ -17,8 +17,9 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
     private Setting userSettings;
 
     private final static Object monitor = new Object();
+    private Menu keyboard;
 
-    private CurrencyInfoBot(String value) {
+    private CurrencyInfoBot(String value, Menu keyboard) {
         // The following code emulates slow initialization.
         try {
             Thread.sleep(1000);
@@ -26,11 +27,12 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
             ex.printStackTrace();
         }
         this.value = value;
+        this.keyboard = keyboard;
     }
 
-    public static CurrencyInfoBot getInstance(String value) {
+    public static CurrencyInfoBot getInstance(String value,Menu keyboard) {
         if (instance == null) {
-            instance = new CurrencyInfoBot(value);
+            instance = new CurrencyInfoBot(value,keyboard);
         }
         return instance;
     }
@@ -90,7 +92,7 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
                 String command = message.getText()
                         .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
                 if (command.equals(Buttons.START.getNameEN())) {
-                    printMessage(chatId, MenuStart.keyboard(),
+                    printMessage(chatId, keyboard.start(),
                             "Ласкаво просимо.Цей бот дозволить відслідкувати актуальні курси валют.");
                     synchronized (monitor) {
                         Settings.settings.put(chatId, userSettings);
@@ -127,29 +129,29 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         } else {
             currentCurrencies.add(enumData);
         }
-        updateMessage(buttonQuery, MenuCurrency.keyboard(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, keyboard.currency(buttonQuery.getMessage().getChatId()));
     }
 
     private void saveSelectZoneId(CallbackQuery buttonQuery, ZoneId enumData) throws TelegramApiException {
         userSettings.setZoneId(enumData);
-        updateMessage(buttonQuery, MenuZoneId.keyboard(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, keyboard.zoneId(buttonQuery.getMessage().getChatId()));
     }
 
     private void saveSelectNumDecPlaces(CallbackQuery buttonQuery, NumberOfDecimalPlaces enumData)
             throws TelegramApiException {
         userSettings.setNumberOfDecimalPlaces(enumData);
-        updateMessage(buttonQuery, MenuNumDecimalPlaces.keyboard(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, keyboard.numDecimalPlaces(buttonQuery.getMessage().getChatId()));
     }
 
     private void saveSelectNotificationTime(CallbackQuery buttonQuery, NotificationTime enumData)
             throws TelegramApiException {
         userSettings.setNotificationTime(enumData);
-        updateMessage(buttonQuery, MenuNotification.keyboard(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, keyboard.notification(buttonQuery.getMessage().getChatId()));
     }
 
     private void saveSelectBanks(CallbackQuery buttonQuery, Banks enumData) throws TelegramApiException {
         userSettings.setSelectedBank(enumData);
-        updateMessage(buttonQuery, MenuBanks.keyboard(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, keyboard.banks(buttonQuery.getMessage().getChatId()));
     }
 
     private void printMessage(Long chatID, InlineKeyboardMarkup keyboard, String text)
@@ -185,28 +187,28 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
             switch (Buttons.convertToEnum(dataButtonQuery)) {
                 case GET_INFO:
                     printMessage(chatId, Settings.getInfo(chatId));
-                    printMessage(chatId, MenuStart.keyboard(), "Щоб отримати інфо натисність кнопку");
+                    printMessage(chatId, keyboard.start(), "Щоб отримати інфо натисність кнопку");
                     break;
                 case SETTINGS:
-                    printMessage(chatId, MenuSettings.keyboard(Settings.settings.get(chatId)), "Виберіть налаштування");
+                    printMessage(chatId, keyboard.settings(Settings.settings.get(chatId)), "Виберіть налаштування");
                     break;
                 case BACK_TO_START:
-                    printMessage(chatId, MenuStart.keyboard(), "Щоб отримати інфо натисність кнопку");
+                    printMessage(chatId, keyboard.start(), "Щоб отримати інфо натисність кнопку");
                     break;
                 case NUM_DECIMAL_PLACES:
-                    updateMessage(buttonQuery, MenuNumDecimalPlaces.keyboard(chatId));
+                    updateMessage(buttonQuery, keyboard.numDecimalPlaces(chatId));
                     break;
                 case BANK:
-                    updateMessage(buttonQuery, MenuBanks.keyboard(chatId));
+                    updateMessage(buttonQuery, keyboard.banks(chatId));
                     break;
                 case CURRENCY:
-                    updateMessage(buttonQuery, MenuCurrency.keyboard(chatId));
+                    updateMessage(buttonQuery, keyboard.currency(chatId));
                     break;
                 case NOTIFICATION:
-                    updateMessage(buttonQuery, MenuNotification.keyboard(chatId));
+                    updateMessage(buttonQuery, keyboard.notification(chatId));
                     break;
                 case ZONEID:
-                    updateMessage(buttonQuery, MenuZoneId.keyboard(chatId));
+                    updateMessage(buttonQuery, keyboard.zoneId(chatId));
                     break;
             }
         }
