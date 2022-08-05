@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import settings.Banks;
 import settings.Buttons;
-import settings.Setting;
+import settings.OptionsUser;
 import settings.Settings;
 
 
 public class Menu {
     public  InlineKeyboardMarkup banks(long chatId) {
-        Setting userSetting = Settings.settings.get(chatId);
-        Banks selectedBank = userSetting.getSelectedBank();
+        OptionsUser userOptionsUser = Settings.settings.get(chatId);
+        Banks selectedBank = userOptionsUser.getSelectedBank();
         List<List<InlineKeyboardButton>> keyboardMenuBanks = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow2 = new ArrayList<>();
@@ -62,8 +62,8 @@ public class Menu {
     }
 
     public static InlineKeyboardMarkup currency(long chatId) {
-        Setting userSetting = Settings.settings.get(chatId);
-        List<Currency> selectedCurrencies = userSetting.getSelectedCurrency();
+        OptionsUser userOptionsUser = Settings.settings.get(chatId);
+        List<Currency> selectedCurrencies = userOptionsUser.getSelectedCurrency();
         List<List<InlineKeyboardButton>> keyboardMenuCurrency = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMenuCurrency1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMenuCurrency2 = new ArrayList<>();
@@ -117,8 +117,8 @@ public class Menu {
     }
 
     public static InlineKeyboardMarkup notification(long chatId) {
-        Setting userSetting = Settings.settings.get(chatId);
-        NotificationTime selectedNotificationTime = userSetting.getNotificationTime();
+        OptionsUser userOptionsUser = Settings.settings.get(chatId);
+        NotificationTime selectedNotificationTime = userOptionsUser.getNotificationTime();
         List<List<InlineKeyboardButton>> keyboardMenuNotification = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow2 = new ArrayList<>();
@@ -205,8 +205,8 @@ public class Menu {
     }
 
     public  InlineKeyboardMarkup numDecimalPlaces(long chatId) {
-        Setting userSetting = Settings.settings.get(chatId);
-        int selectedNumDecPlaces = userSetting.getNumberOfDecimalPlaces();
+        OptionsUser userOptionsUser = Settings.settings.get(chatId);
+        int selectedNumDecPlaces = userOptionsUser.getNumberOfDecimalPlaces();
 
         List<List<InlineKeyboardButton>> keyboard =  new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow1 = new ArrayList<>();
@@ -252,8 +252,8 @@ public class Menu {
         return "";
     }
 
-    public static InlineKeyboardMarkup settings(Setting setting) {
-        String selectedCurr = setting.getSelectedCurrency().stream()
+    public static InlineKeyboardMarkup settings(OptionsUser optionsUser) {
+        String selectedCurr = optionsUser.getSelectedCurrency().stream()
                 .map(Currency::getCurrencyName)
                 .collect(Collectors.joining(", ", "(", ")"));
 
@@ -265,25 +265,25 @@ public class Menu {
         List<InlineKeyboardButton> keyboardMSetRow5 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMSetRow6 = new ArrayList<>();
         InlineKeyboardButton buttonNumOfDecPlaces = InlineKeyboardButton.builder()
-                .text(Buttons.NUM_DECIMAL_PLACES.getName() + " (" + setting.getNumberOfDecimalPlaces() + ")")
+                .text(Buttons.NUM_DECIMAL_PLACES.getName() + " (" + optionsUser.getNumberOfDecimalPlaces() + ")")
                 .callbackData(Buttons.NUM_DECIMAL_PLACES.getNameEN())
                 .build();
         InlineKeyboardButton buttonBank = InlineKeyboardButton.builder()
-                .text(Buttons.BANK.getName() + " (" + setting.getSelectedBank().getBankNameUA() + ")")
+                .text(Buttons.BANK.getName() + " (" + optionsUser.getSelectedBank().getBankNameUA() + ")")
                 .callbackData(Buttons.BANK.getNameEN())
                 .build();
         InlineKeyboardButton buttonCurrency = InlineKeyboardButton.builder()
                 .text(Buttons.CURRENCY.getName() + selectedCurr)
                 .callbackData(Buttons.CURRENCY.getNameEN())
                 .build();
-        String NotificationTimeSet = setting.getNotificationTime().getTime() == 0 ? "OFF" :
-                String.valueOf(setting.getNotificationTime().getTime());
+        String NotificationTimeSet = optionsUser.getNotificationTime().getTime() == 0 ? "OFF" :
+                String.valueOf(optionsUser.getNotificationTime().getTime());
         InlineKeyboardButton buttonNotificationTime = InlineKeyboardButton.builder()
                 .text(Buttons.NOTIFICATION.getName() + " (" + NotificationTimeSet + ")")
                 .callbackData(Buttons.NOTIFICATION.getNameEN())
                 .build();
         InlineKeyboardButton buttonZoneId = InlineKeyboardButton.builder()
-                .text(Buttons.ZONEID.getName() + " (" + setting.getZoneId().getNameZone() + ")")
+                .text(Buttons.ZONEID.getName() + " (" + optionsUser.getZoneId().getNameZone() + ")")
                 .callbackData(Buttons.ZONEID.getNameEN())
                 .build();
         InlineKeyboardButton buttonBack = InlineKeyboardButton.builder()
@@ -327,8 +327,8 @@ public class Menu {
     }
 
     public static InlineKeyboardMarkup zoneId(Long chatId) {
-        Setting userSetting = Settings.settings.get(chatId);
-        ZoneId selectedZoneID = userSetting.getZoneId();
+        OptionsUser userOptionsUser = Settings.settings.get(chatId);
+        ZoneId selectedZoneID = userOptionsUser.getZoneId();
         List<List<InlineKeyboardButton>> keyboardMZoneId = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMZoneIdRow1 = new ArrayList<>();
         List<InlineKeyboardButton> keyboardMZoneIdRow2 = new ArrayList<>();

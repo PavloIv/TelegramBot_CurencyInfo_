@@ -1,5 +1,4 @@
 package settings;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -15,26 +14,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static java.lang.String.format;
-
 public class Settings {
-    public static Map<Long, Setting> settings = new HashMap<>();
+    public static Map<Long, OptionsUser> settings = new HashMap<>();
     private static final Gson settingGson = new Gson();
     private static final String SETTING_GSON_PATH = "src/main/resources/settings.json";
-
     private static final Object monitor = new Object();
-
     static ExecutorService service = Executors.newSingleThreadExecutor();
-
-
     public static String getInfo (Long chatId) {
         service.execute(new SaveSettings());
         StringBuilder messageToUser = new StringBuilder();
-        Setting userSetting = settings.get(chatId);
-        String bankName = userSetting.getSelectedBank().getBankNameUA();
+        OptionsUser userOptionsUser = settings.get(chatId);
+        String bankName = userOptionsUser.getSelectedBank().getBankNameUA();
         messageToUser.append(bankName).append("\n");
-        int numberDecPlaces = userSetting.getNumberOfDecimalPlaces();
-        List<Currency> currencies = userSetting.getSelectedCurrency();
-        Bank bankInfo = CurrencyDataBase.getCurrentInfo(userSetting.getSelectedBank());
+        int numberDecPlaces = userOptionsUser.getNumberOfDecimalPlaces();
+        List<Currency> currencies = userOptionsUser.getSelectedCurrency();
+        Bank bankInfo = CurrencyDataBase.getCurrentInfo(userOptionsUser.getSelectedBank());
         for (Currency currency : currencies) {
             messageToUser.append("Курс купівлі ")
                     .append(currency.getCurrencyName())
@@ -51,7 +45,6 @@ public class Settings {
         }
         return messageToUser.toString();
     }
-
     public static File fileSettingsGsonCheck() {
         File settingGsonFile = new File(SETTING_GSON_PATH);
         if (!settingGsonFile.exists()) {
@@ -64,8 +57,6 @@ public class Settings {
         }
         return settingGsonFile;
     }
-
-
     public static void load() {
         synchronized (monitor) {
             try {
@@ -77,7 +68,6 @@ public class Settings {
             }
         }
     }
-
     public static void save() {
         synchronized (monitor) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileSettingsGsonCheck()))) {
@@ -87,25 +77,23 @@ public class Settings {
             }
         }
     }
-
     public static void converter() {
         synchronized (monitor) {
             Map<Long, IntermediateSetting> inputMap = IntermediateSettings.intermediateSettings;
-            Map<Long, Setting> outputMap = Settings.settings;
+            Map<Long, OptionsUser> outputMap = Settings.settings;
             inputMap.forEach((k, v) -> {
-                Setting outputSetting = new Setting();
+                OptionsUser outputOptionsUser = new OptionsUser();
 
-                outputSetting.setChatId(v.getChatId());
-                outputSetting.setNumberOfDecimalPlaces(parseNumOfDecPlaces(v.getNumberOfDecimalPlaces()));
-                outputSetting.setSelectedBank(parseSelectedBank(v.getSelectedBank()));
-                outputSetting.setSelectedCurrency(parseCurrency(v.getSelectedCurrency()));
-                outputSetting.setNotificationTime(parseNotificationTime(v.getNotificationTime()));
-                outputSetting.setZoneId(parseZoneId(v.getZoneId()));
-                outputMap.put(v.getChatId(), outputSetting);
+                outputOptionsUser.setChatId(v.getChatId());
+                outputOptionsUser.setNumberOfDecimalPlaces(parseNumOfDecPlaces(v.getNumberOfDecimalPlaces()));
+                outputOptionsUser.setSelectedBank(parseSelectedBank(v.getSelectedBank()));
+                outputOptionsUser.setSelectedCurrency(parseCurrency(v.getSelectedCurrency()));
+                outputOptionsUser.setNotificationTime(parseNotificationTime(v.getNotificationTime()));
+                outputOptionsUser.setZoneId(parseZoneId(v.getZoneId()));
+                outputMap.put(v.getChatId(), outputOptionsUser);
             });
         }
     }
-
     private static NumberOfDecimalPlaces parseNumOfDecPlaces(String inputStrNumOfDec) {
         for (NumberOfDecimalPlaces value : NumberOfDecimalPlaces.values()) {
             if (inputStrNumOfDec.equals(value.name())) {
@@ -114,7 +102,6 @@ public class Settings {
         }
         return null;
     }
-
     private static Banks parseSelectedBank(String inputStrBank) {
         for (Banks value : Banks.values()) {
             if (inputStrBank.equals(value.name())) {
@@ -123,7 +110,6 @@ public class Settings {
         }
         return null;
     }
-
     private static List<Currency> parseCurrency(List<String> inputListStrCurrency) {
         List<Currency> result = new ArrayList<>();
         for (Currency value : Currency.values()) {
@@ -136,7 +122,6 @@ public class Settings {
         }
         return result;
     }
-
     private static NotificationTime parseNotificationTime(String inputStrNotificationTime) {
         for (NotificationTime value : NotificationTime.values()) {
             if (inputStrNotificationTime.equals(value.name())) {
@@ -145,7 +130,6 @@ public class Settings {
         }
         return null;
     }
-
     private static ZoneId parseZoneId(String inputStrZoneId) {
         for (ZoneId value : ZoneId.values()) {
             if (inputStrZoneId.equals(value.name())) {
@@ -154,6 +138,4 @@ public class Settings {
         }
         return null;
     }
-
-
 }

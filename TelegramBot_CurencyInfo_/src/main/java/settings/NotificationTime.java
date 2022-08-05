@@ -1,5 +1,4 @@
 package settings;
-
 public enum NotificationTime {
     NINE (9, false),
     TEN (10,false),
@@ -12,32 +11,15 @@ public enum NotificationTime {
     SEVENTEEN (17,false),
     EIGHTEEN (18,false),
     SWICH_OFF (0,false);
-
-
     private int time;
     private boolean select;
-
     NotificationTime(int time, boolean select) {
         this.time = time;
         this.select = select;
     }
-
     public int getTime() {
         return time;
     }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public boolean isSelect() {
-        return select;
-    }
-
-    public void setSelect(boolean select) {
-        this.select = select;
-    }
-
     public static NotificationTime convertToEnum (String text){
         for (NotificationTime time: NotificationTime.values()) {
             if (String.valueOf(time.getTime()).equals(text)) {

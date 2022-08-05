@@ -9,31 +9,6 @@ public class IntermediateSetting {
     private List<String> selectedCurrency;
     private String notificationTime;
     private String zoneId;
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
-    public void setNumberOfDecimalPlaces(String numberOfDecimalPlaces) {
-        this.numberOfDecimalPlaces = numberOfDecimalPlaces;
-    }
-
-    public void setSelectedBank(String selectedBank) {
-        this.selectedBank = selectedBank;
-    }
-
-    public void setSelectedCurrency(List<String> selectedCurrency) {
-        this.selectedCurrency = selectedCurrency;
-    }
-
-    public void setNotificationTime(String notificationTime) {
-        this.notificationTime = notificationTime;
-    }
-
-    public void setZoneId(String zoneId) {
-        this.zoneId = zoneId;
-    }
-
     public Long getChatId() {
         return chatId;
     }

@@ -1,5 +1,4 @@
 package settings;
-
 public enum ZoneId {
     UTC_ZERO(0,"UTC 0", true),
     UTC_ONE(1,"UTC +1", false),
@@ -27,11 +26,8 @@ public enum ZoneId {
     UTC_MINUS_ELEVEN(-11,"UTC -11", false),
     UTC_MINUS_TWELVE(-12,"UTC -12", false);
     private int zone;
-
     private String nameZone;
     private boolean select;
-
-
     ZoneId(int zone,String nameZone, boolean select) {
         this.zone = zone;
         this.nameZone = nameZone;
@@ -43,15 +39,6 @@ public enum ZoneId {
     public String getNameZone(){
         return nameZone;
     }
-
-    public boolean isSelect() {
-        return select;
-    }
-
-    public void setSelect(boolean select) {
-        this.select = select;
-    }
-
     public static ZoneId convertToEnum (String text){
         for (ZoneId button: ZoneId.values()) {
             if (button.getNameZone().equals(text)) {
