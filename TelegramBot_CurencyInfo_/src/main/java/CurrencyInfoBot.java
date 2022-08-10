@@ -8,12 +8,15 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import settings.*;
 import settings.Currency;
 import java.util.*;
+
+import static keyboards.Menu.*;
+
 public class CurrencyInfoBot extends TelegramLongPollingBot {
     private static CurrencyInfoBot instance;
     public String value;
     private OptionsUser userSettings;
     private final static Object monitor = new Object();
-    private Menu keyboard;
+    private final Menu keyboard;
     private CurrencyInfoBot(String value, Menu keyboard) {
         try {
             Thread.sleep(1000);
@@ -72,7 +75,7 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
                 String command = message.getText()
                         .substring(commandEntity.get().getOffset(), commandEntity.get().getLength());
                 if (command.equals(Buttons.START.getNameEN())) {
-                    printMessage(chatId, keyboard.start(),
+                    printMessage(chatId, start(),
                             "Ласкаво просимо.Цей бот дозволить відслідкувати актуальні курси валют.");
                     synchronized (monitor) {
                         Settings.settings.put(chatId, userSettings);
@@ -107,11 +110,11 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         } else {
             currentCurrencies.add(enumData);
         }
-        updateMessage(buttonQuery, keyboard.currency(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, currency(buttonQuery.getMessage().getChatId()));
     }
     private void saveSelectZoneId(CallbackQuery buttonQuery, ZoneId enumData) throws TelegramApiException {
         userSettings.setZoneId(enumData);
-        updateMessage(buttonQuery, keyboard.zoneId(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, zoneId(buttonQuery.getMessage().getChatId()));
     }
     private void saveSelectNumDecPlaces(CallbackQuery buttonQuery, NumberOfDecimalPlaces enumData)
             throws TelegramApiException {
@@ -121,7 +124,7 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
     private void saveSelectNotificationTime(CallbackQuery buttonQuery, NotificationTime enumData)
             throws TelegramApiException {
         userSettings.setNotificationTime(enumData);
-        updateMessage(buttonQuery, keyboard.notification(buttonQuery.getMessage().getChatId()));
+        updateMessage(buttonQuery, notification(buttonQuery.getMessage().getChatId()));
     }
     private void saveSelectBanks(CallbackQuery buttonQuery, Banks enumData) throws TelegramApiException {
         userSettings.setSelectedBank(enumData);
@@ -158,13 +161,13 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
             switch (Buttons.convertToEnum(dataButtonQuery)) {
                 case GET_INFO:
                     printMessage(chatId, Settings.getInfo(chatId));
-                    printMessage(chatId, keyboard.start(), "Щоб отримати інфо натисність кнопку");
+                    printMessage(chatId, start(), "Щоб отримати інфо натисність кнопку");
                     break;
                 case SETTINGS:
-                    printMessage(chatId, keyboard.settings(Settings.settings.get(chatId)), "Виберіть налаштування");
+                    printMessage(chatId, settings(Settings.settings.get(chatId)), "Виберіть налаштування");
                     break;
                 case BACK_TO_START:
-                    printMessage(chatId, keyboard.start(), "Щоб отримати інфо натисність кнопку");
+                    printMessage(chatId, start(), "Щоб отримати інфо натисність кнопку");
                     break;
                 case NUM_DECIMAL_PLACES:
                     updateMessage(buttonQuery, keyboard.numDecimalPlaces(chatId));
@@ -173,19 +176,18 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
                     updateMessage(buttonQuery, keyboard.banks(chatId));
                     break;
                 case CURRENCY:
-                    updateMessage(buttonQuery, keyboard.currency(chatId));
+                    updateMessage(buttonQuery, currency(chatId));
                     break;
                 case NOTIFICATION:
-                    updateMessage(buttonQuery, keyboard.notification(chatId));
+                    updateMessage(buttonQuery, notification(chatId));
                     break;
                 case ZONEID:
-                    updateMessage(buttonQuery, keyboard.zoneId(chatId));
+                    updateMessage(buttonQuery, zoneId(chatId));
                     break;
             }
         }
     }
     public void checkBanksMenu(CallbackQuery buttonQuery) throws TelegramApiException {
-        long chatId = buttonQuery.getMessage().getChatId();
         String dataButtonQuery = buttonQuery.getData();
         if (Banks.convertToEnum(dataButtonQuery) != null){
             switch (Banks.convertToEnum(dataButtonQuery)) {
@@ -208,7 +210,6 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         }
     }
     public void checkDecimalPlacesMenu(CallbackQuery buttonQuery) throws TelegramApiException {
-        long chatId = buttonQuery.getMessage().getChatId();
         String dataButtonQuery = buttonQuery.getData();
         if (NumberOfDecimalPlaces.convertToEnum(dataButtonQuery) != null){
             switch (NumberOfDecimalPlaces.convertToEnum(dataButtonQuery)) {
@@ -231,7 +232,6 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         }
     }
     public void checkNotificationMenu(CallbackQuery buttonQuery) throws TelegramApiException {
-        long chatId = buttonQuery.getMessage().getChatId();
         String dataButtonQuery = buttonQuery.getData();
         if (NotificationTime.convertToEnum(dataButtonQuery) != null){
             switch (NotificationTime.convertToEnum(dataButtonQuery)) {
@@ -294,7 +294,6 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         }
     }
     public void checkCurrencyMenu(CallbackQuery buttonQuery) throws TelegramApiException {
-        long chatId = buttonQuery.getMessage().getChatId();
         String dataButtonQuery = buttonQuery.getData();
         if (Currency.convertToEnum(dataButtonQuery) != null){
             switch (Currency.convertToEnum(dataButtonQuery)) {
@@ -314,7 +313,6 @@ public class CurrencyInfoBot extends TelegramLongPollingBot {
         }
     }
     public void checkZoneIdMenu(CallbackQuery buttonQuery) throws TelegramApiException {
-//        long chatId = buttonQuery.getMessage().getChatId();
         String dataButtonQuery = buttonQuery.getData();
         if (ZoneId.convertToEnum(dataButtonQuery) != null){
             switch (ZoneId.convertToEnum(dataButtonQuery)) {
